@@ -54,21 +54,20 @@ final class ResultViewController: UIViewController {
     private func getResults(for answers: [Answer]) {
         
         var animals: [Animal] = []
+        var mostCommonAnimal: [Animal] = []
         
         for answer in answers {
             animals.append(answer.animal)
         }
         
-        let mostCommonAnimal = Dictionary(grouping: animals, by: {$0}).filter { $1.count > 1}.keys
-        
-        for result in mostCommonAnimal {
-            resultIcon = String(result.rawValue)
-            resultDescription = result.definition
+        for result in animals {
+            let cutAnimal = animals.removeFirst()
+            if animals.contains(result) && !mostCommonAnimal.contains(result) {
+                mostCommonAnimal.append(cutAnimal)
+            }
         }
-        
-        if mostCommonAnimal.isEmpty || mostCommonAnimal.count > 1 {
-            resultIcon = "🦖"
-            resultDescription = "Вы удивительны! Но попробуйте пройти тест еще раз."
+        print(mostCommonAnimal)
+            resultIcon = String(mostCommonAnimal.first?.rawValue ?? "🦖")
+            resultDescription = mostCommonAnimal.first?.definition ?? "Вы удивительны! Но попробуйте пройти тест еще раз."
         }
     }
-}
